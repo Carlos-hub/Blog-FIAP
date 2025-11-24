@@ -7,6 +7,6 @@ import { studentMapper } from "./mappers/StudentMapper";
 
 export class StudentRepository extends AbstractRepository<StudentEntity, StudentDTO> {
     constructor() {
-      super(StudentModel, studentMapper);
+      super(StudentsModel, studentMapper);
     }
 }
