@@ -1,6 +1,8 @@
 import express, { Express, Request, Response, Router } from 'express';
 import connectToMongoDB from './infra/Database/MongoDB/Connect';
 import StudentRoute from './Domain/Student/Routes/StudentRoute';
+import PostRouter from './Domain/Posts/Routes/PostRouter';
+import ProfessorRoute from './Domain/Professor/Routes/ProfessorRoute';
 
 const app: Express = express();
 
@@ -10,7 +12,8 @@ app.use(express.urlencoded({ extended: true }));
 
 const router = Router();
 const studentRoute = new StudentRoute(router);
-
+const postRoute = new PostRouter(router);
+const professorRoute = new ProfessorRoute(router);
 app.use(router);
 
 app.get('/', (req: Request, res: Response) => {

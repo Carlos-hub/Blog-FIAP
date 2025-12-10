@@ -7,7 +7,6 @@ export default class StudentRoute {
     private readonly studentService: StudentService;
     private routePrefix: string = '/students';
     constructor(private readonly router: Router) {
-
         const studentRepository = new StudentRepository();
         const studentService = new StudentService(studentRepository);
         this.studentService = studentService;
