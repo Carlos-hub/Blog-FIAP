@@ -1,5 +1,6 @@
 import { ProfessorDTO } from "../DTOs/ProfessorDTO";
 import ProfessorRepository from "../Repositories/ProfessorRepository";
+import bcrypt from "bcrypt";
 
 
 export default class ProfessorService {
@@ -20,7 +21,8 @@ export default class ProfessorService {
     }
 
     async createProfessor(professor: ProfessorDTO): Promise<ProfessorDTO> {
-        return await this.professorRepository.create(professor);
+        const hashed = await bcrypt.hash(professor.password, 10);
+        return await this.professorRepository.create({ ...professor, password: hashed });
     }
 
     async updateProfessor(id: string, professor: ProfessorDTO): Promise<ProfessorDTO> {

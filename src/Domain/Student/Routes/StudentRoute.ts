@@ -1,7 +1,8 @@
 import { StudentRepository } from "../Repositories/StudentRepository";
 import StudentService from "../Services/StudentService";
-import { Express, Request, Response, Router } from 'express';
+import { Request, Response, Router } from 'express';
 import { CustomError } from '../../../Exceptions/Exceptions';
+import { ok, created, handleError } from "../../../infra/Http/ApiResponse";
 
 export default class StudentRoute {
     private readonly studentService: StudentService;
@@ -14,15 +15,15 @@ export default class StudentRoute {
         router.get(this.routePrefix+'/', this.getStudents.bind(this));
         router.get(this.routePrefix+'/:id', this.getStudentById.bind(this));
         router.put(this.routePrefix+'/:id', this.updateStudent.bind(this));
-        router.delete(this.routePrefix, this.deleteStudent.bind(this));
+        router.delete(this.routePrefix+'/:id', this.deleteStudent.bind(this));
     }
 
     private async getStudents(req: Request, res: Response) {
         try {
             const students = await this.studentService.getStudents();
-            res.status(200).json(students);
+            return ok(res, students);
         } catch (error) {
-            res.status(500).json({ error: (error as Error).message });
+            return handleError(res, error);
         }
     }
     private async getStudentById(req: Request, res: Response) {
@@ -35,9 +36,9 @@ export default class StudentRoute {
             if (!student) {
                 throw new CustomError('Student not found', 404);
             }
-            res.status(200).json(student);
+            return ok(res, student);
         } catch (error: any) {
-            res.status(error.statusCode).json({ error: (error).message });
+            return handleError(res, error);
         }
     }
 
@@ -48,9 +49,9 @@ export default class StudentRoute {
                 throw new CustomError('Name, email and password are required', 400);
             }
             const student = await this.studentService.createStudent(body);
-            res.status(201).json(student);
+            return created(res, student);
         } catch (error: CustomError | any) {
-            res.status(error.statusCode).json({ error: (error).message });
+            return handleError(res, error);
         }
     }
 
@@ -62,9 +63,9 @@ export default class StudentRoute {
                 throw new CustomError('ID is required', 400);
             }
             const student = await this.studentService.updateStudent(id, body);
-            res.json(student);
+            return ok(res, student);
         } catch (error: CustomError | any) {
-            res.status(error.statusCode).json({ error: (error).message });
+            return handleError(res, error);
         }
     }
     private async deleteStudent(req: Request, res: Response) {
@@ -74,9 +75,9 @@ export default class StudentRoute {
                 throw new CustomError('ID is required', 400);
             }
             const student = await this.studentService.deleteStudent(id);
-            res.status(200).json(student);
+            return ok(res, student);
         } catch (error: CustomError | any) {
-            res.status(error.statusCode).json({ error: (error).message });
+            return handleError(res, error);
         } 
     }
 }

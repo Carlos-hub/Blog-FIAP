@@ -3,8 +3,9 @@ import ProfessorService from '../Services/ProfessorService';
 import ProfessorRepository from '../Repositories/ProfessorRepository';
 import { CustomError } from '../../../Exceptions/Exceptions';
 import { ProfessorDTO } from '../DTOs/ProfessorDTO';
+import { ok, created, handleError, fail } from '../../../infra/Http/ApiResponse';
 
-export default class StudentRoute {
+export default class ProfessorRoute {
     private readonly professorService: ProfessorService;
     private routePrefix: string = '/professors';
     constructor(private readonly router: Router) {
@@ -21,18 +22,18 @@ export default class StudentRoute {
     private async getProfessors(req: Request, res: Response) {
         try {
             const professors = await this.professorService.getProfessors();
-            res.status(200).json(professors);
+            return ok(res, professors);
         } catch (error) {
-            res.status(500).json({ error: (error as Error).message });
+            return handleError(res, error);
         }
     }
 
     private async getProfessorById(req: Request, res: Response) {
         try {
             const professor = await this.professorService.getProfessorById(req.params.id);
-            res.status(200).json(professor);
+            return ok(res, professor);
         } catch (error) {
-            res.status(500).json({ error: (error as Error).message });
+            return handleError(res, error);
         }
     }
 
@@ -40,31 +41,31 @@ export default class StudentRoute {
         try {
             const { name, email, password, discipline } = req.body;
             if (!name || !email || !password || !discipline) {
-                throw new CustomError('Name, email, password and discipline are required', 400);
+                return fail(res, 400, 'Name, email, password and discipline are required');
             }
             const professorDTO: ProfessorDTO = { name, email, password, discipline };
             const professor = await this.professorService.createProfessor(professorDTO);
-            res.status(201).json(professor);
+            return created(res, professor);
         } catch (error) {
-            res.status(500).json({ error: (error as Error).message });
+            return handleError(res, error);
         }
     }
 
     private async updateProfessor(req: Request, res: Response) {
         try {
             const professor = await this.professorService.updateProfessor(req.params.id, req.body);
-            res.status(200).json(professor);
+            return ok(res, professor);
         } catch (error) {
-            res.status(500).json({ error: (error as Error).message });
+            return handleError(res, error);
         }
     }
 
     private async deleteProfessor(req: Request, res: Response) {
         try {
             const professor = await this.professorService.deleteProfessor(req.params.id);
-            res.status(200).json(professor);
+            return ok(res, professor);
         } catch (error) {
-            res.status(500).json({ error: (error as Error).message });
+            return handleError(res, error);
         }
     }
 }

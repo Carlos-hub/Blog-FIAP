@@ -9,6 +9,7 @@ const postSchema: Schema<PostsInterface> = new Schema<PostsInterface>({
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
     authorId: { type: String, required: true },
+    discipline: { type: String, required: true },
     likes: { type: Number, default: 0 },
     deslikes: { type: Number, default: 0 },
 });

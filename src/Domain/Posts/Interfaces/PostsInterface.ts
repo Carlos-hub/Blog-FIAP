@@ -5,6 +5,7 @@ export interface PostsInterface {
   createdAt: Date;
   updatedAt: Date;
   authorId: string;
+  discipline: string;
   likes: number;
   deslikes: number;
 }

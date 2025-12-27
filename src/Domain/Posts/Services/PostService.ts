@@ -5,6 +5,9 @@ export default class PostService {
     constructor(private readonly postRepository: PostsRepository) {
         this.postRepository = postRepository;
     }
+    async searchPosts(term: string): Promise<PostDTO[]> {
+        return await this.postRepository.searchByTerm(term);
+    }
     async createPost(post: PostDTO): Promise<PostDTO> {
         return await this.postRepository.create(post);
     }
