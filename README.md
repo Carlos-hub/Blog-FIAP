@@ -30,7 +30,7 @@ postagens criadas, facilitando a gestão do conteúdo.
 ▪ Permite que docentes excluam uma postagem específica,
 usando o ID do post como parâmetro.
 
-- GET /posts/search - Busca de Posts:
+- GET /posts/search?q=searchParam - Busca de Posts:
 ▪ Este endpoint permitirá a busca de posts por palavraschave. Os usuários poderão passar uma query string com o
 termo de busca e o sistema retornará uma lista de posts que
 contêm esse termo no título ou conteúdo.
