@@ -64,9 +64,7 @@ export default class PostRouter {
 
     private async getPosts(req: Request, res: Response) {
         try {
-			console.log("getPosts");
             const posts = await this.postService.getPosts();
-			console.log(posts);
 			return ok(res, posts);
         } catch (error: CustomError | any) {
             return handleError(res, error);
