@@ -4,7 +4,7 @@ import PostsRepository from "../Repositories/PostsRepository";
 import { CustomError } from "../../../Exceptions/Exceptions";
 import { PostDTO } from "../DTOs/PostDTO";
 import { ok, created, handleError } from "../../../infra/Http/ApiResponse";
-import { requireProfessorAuth, requireStudentAuth } from "../../../infra/Auth/Middleware";
+import { requireProfessorAuth, requireStudentAuth, requireStudentOrProfessorAuth } from "../../../infra/Auth/Middleware";
 
 
 export default class PostRouter {
@@ -17,8 +17,8 @@ export default class PostRouter {
         this.postService = postService;
         router.get(this.routePrefix+'/search', requireStudentAuth, this.searchPosts.bind(this));
         router.post(this.routePrefix, requireProfessorAuth, this.createPost.bind(this));
-        router.get(this.routePrefix, requireStudentAuth, this.getPosts.bind(this));
-        router.get(this.routePrefix+'/:id', requireStudentAuth, this.getPostById.bind(this));
+        router.get(this.routePrefix, requireStudentOrProfessorAuth, this.getPosts.bind(this));
+        router.get(this.routePrefix+'/:id', requireStudentOrProfessorAuth, this.getPostById.bind(this));
         router.put(this.routePrefix+'/:id', requireProfessorAuth, this.updatePost.bind(this));
         router.delete(this.routePrefix+'/:id', requireProfessorAuth, this.deletePost.bind(this));
     }
@@ -64,8 +64,10 @@ export default class PostRouter {
 
     private async getPosts(req: Request, res: Response) {
         try {
+			console.log("getPosts");
             const posts = await this.postService.getPosts();
-            return ok(res, posts);
+			console.log(posts);
+			return ok(res, posts);
         } catch (error: CustomError | any) {
             return handleError(res, error);
         }
