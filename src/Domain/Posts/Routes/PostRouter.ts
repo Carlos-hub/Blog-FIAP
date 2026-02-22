@@ -76,7 +76,7 @@ export default class PostRouter {
         try {
             const existing = await this.postService.getPostById(req.params.id);
             const user = (req as any).user as { id: string; discipline?: string };
-            if (!user || user.id !== existing.authorId.toString()) {
+            if (!user || user.id !== existing.authorId._id.toString()) {
                 throw new CustomError('Forbidden', 403);
             }
             const post = await this.postService.updatePost(req.params.id, req.body);
