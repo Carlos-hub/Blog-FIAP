@@ -39,12 +39,13 @@ export default class ProfessorRoute {
 
     private async createProfessor(req: Request, res: Response) {
         try {
-            const { name, email, password, discipline } = req.body;
+			const { name, email, password, discipline } = req.body;
             if (!name || !email || !password || !discipline) {
-                return fail(res, 400, 'Name, email, password and discipline are required');
+				return fail(res, 400, 'Name, email, password and discipline are required');
             }
             const professorDTO: ProfessorDTO = { name, email, password, discipline };
             const professor = await this.professorService.createProfessor(professorDTO);
+			console.log(professor);
             return created(res, professor);
         } catch (error) {
             return handleError(res, error);

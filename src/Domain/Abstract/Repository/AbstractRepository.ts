@@ -22,12 +22,17 @@ export default abstract class AbstractRepository<TEntity, TDTO> {
   }
 
   async create(dto: TDTO): Promise<TDTO> {
-    const toCreate = this.mapper.toEntity(dto);
-    const created = await this.model.create(toCreate as any);
-    const plain = typeof (created as any).toObject === "function"
-      ? (created as any).toObject()
-      : created;
-    return this.mapper.toDTO(plain as TEntity);
+	  try {
+		const toCreate = this.mapper.toEntity(dto);
+	    const created = await this.model.create(toCreate as any);
+        const plain = typeof (created as any).toObject === "function"
+        ? (created as any).toObject()
+        : created;
+    	return this.mapper.toDTO(plain as TEntity);
+	  } catch (error) {
+		console.log(error);
+		throw error;
+	  }
   }
 
   async update(id: string, dto: TDTO): Promise<TDTO | null> {

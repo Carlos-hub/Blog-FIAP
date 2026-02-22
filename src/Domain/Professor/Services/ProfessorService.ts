@@ -21,7 +21,7 @@ export default class ProfessorService {
     }
 
     async createProfessor(professor: ProfessorDTO): Promise<ProfessorDTO> {
-        const hashed = await bcrypt.hash(professor.password, 10);
+		const hashed = await bcrypt.hash(professor.password, 10);
         return await this.professorRepository.create({ ...professor, password: hashed });
     }
 
