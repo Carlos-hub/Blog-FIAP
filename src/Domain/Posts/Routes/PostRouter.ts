@@ -57,7 +57,6 @@ export default class PostRouter {
     private async getPostById(req: Request, res: Response) {
         try {
             const post = await this.postService.getPostById(req.params.id);
-			console.log("post", post);
             return ok(res, post);
         } catch (error: CustomError | any) {
             return handleError(res, error);
