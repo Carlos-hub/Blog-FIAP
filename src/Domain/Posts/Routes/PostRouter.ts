@@ -5,6 +5,7 @@ import { CustomError } from "../../../Exceptions/Exceptions";
 import { PostDTO } from "../DTOs/PostDTO";
 import { ok, created, handleError } from "../../../infra/Http/ApiResponse";
 import { requireProfessorAuth, requireStudentAuth, requireStudentOrProfessorAuth } from "../../../infra/Auth/Middleware";
+import { Types } from "mongoose";
 
 
 export default class PostRouter {
@@ -38,7 +39,7 @@ export default class PostRouter {
         const postDTO: PostDTO = {
             title: title,
             content: content,
-            authorId: user.id,
+            authorId: new Types.ObjectId(user.id as string),
             discipline: user.discipline,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -56,6 +57,7 @@ export default class PostRouter {
     private async getPostById(req: Request, res: Response) {
         try {
             const post = await this.postService.getPostById(req.params.id);
+			console.log("post", post);
             return ok(res, post);
         } catch (error: CustomError | any) {
             return handleError(res, error);
@@ -75,7 +77,7 @@ export default class PostRouter {
         try {
             const existing = await this.postService.getPostById(req.params.id);
             const user = (req as any).user as { id: string; discipline?: string };
-            if (!user || user.id !== existing.authorId) {
+            if (!user || user.id !== existing.authorId.toString()) {
                 throw new CustomError('Forbidden', 403);
             }
             const post = await this.postService.updatePost(req.params.id, req.body);
@@ -89,7 +91,7 @@ export default class PostRouter {
         try {
             const existing = await this.postService.getPostById(req.params.id);
             const user = (req as any).user as { id: string; discipline?: string };
-            if (!user || user.id !== existing.authorId) {
+            if (!user || user.id !== existing.authorId.toString()) {
                 throw new CustomError('Forbidden', 403);
             }
             const deleted = await this.postService.deletePost(req.params.id);

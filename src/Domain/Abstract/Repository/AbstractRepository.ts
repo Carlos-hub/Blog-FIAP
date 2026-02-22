@@ -13,7 +13,7 @@ export default abstract class AbstractRepository<TEntity, TDTO> {
 
   async findAll(): Promise<TDTO[]> {
     const docs = await this.model.find().lean();
-    return docs.map(d => this.mapper.toDTO(d as TEntity));
+    return docs.map(d => this.mapper.toDTO(d as unknown as TEntity));
   }
 
   async findById(id: string): Promise<TDTO | null> {

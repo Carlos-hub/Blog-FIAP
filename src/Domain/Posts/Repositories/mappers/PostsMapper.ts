@@ -15,15 +15,18 @@ export const postsMapper: RepositoryMapper<PostsInterface, PostDTO> = {
       likes: dto.likes,
       deslikes: dto.deslikes
   }),
-  toDTO: (entity: PostsInterface): PostDTO => ({
-      id: String((entity as any)._id ?? (entity as any).id ?? ''),
-      title: entity.title,
-      content: entity.content,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
-      authorId: entity.authorId.toString(),
-      discipline: entity.discipline,
-      likes: entity.likes,
-      deslikes: entity.deslikes
-  }),
+  toDTO: (entity: PostsInterface): PostDTO => {
+      
+      return {
+        id: String((entity as any)._id ?? (entity as any).id ?? ''),
+        title: entity.title,
+        content: entity.content,
+        createdAt: entity.createdAt,
+        updatedAt: entity.updatedAt,
+        authorId: entity.authorId,
+        discipline: entity.discipline,
+        likes: entity.likes,
+        deslikes: entity.deslikes,
+      };
+  },
 };
