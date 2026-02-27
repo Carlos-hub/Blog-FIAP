@@ -8,11 +8,21 @@ export default class PostsRepository extends AbstractRepository<PostsInterface, 
     constructor() {
         super(PostModel, postsMapper);
     }
+
+    async findAll(): Promise<PostDTO[]> {
+        const docs = await PostModel.find()
+            .populate('authorId', '_id name email discipline')
+            .lean();
+        return docs.map(d => this.mapper.toDTO(d as unknown as PostsInterface));
+    }
+
     async searchByTerm(term: string): Promise<PostDTO[]> {
         const regex = new RegExp(term, 'i');
         const docs = await PostModel.find({
             $or: [{ title: { $regex: regex } }, { content: { $regex: regex } }]
-        }).lean();
+        })
+            .populate('authorId', '_id name email discipline')
+            .lean();
         return docs.map(d => this.mapper.toDTO(d as unknown as PostsInterface));
     }
 
