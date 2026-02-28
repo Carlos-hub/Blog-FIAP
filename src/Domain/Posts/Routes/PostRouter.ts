@@ -4,7 +4,7 @@ import PostsRepository from "../Repositories/PostsRepository";
 import { CustomError } from "../../../Exceptions/Exceptions";
 import { PostDTO } from "../DTOs/PostDTO";
 import { ok, created, handleError } from "../../../infra/Http/ApiResponse";
-import { requireProfessorAuth, requireStudentAuth, requireStudentOrProfessorAuth } from "../../../infra/Auth/Middleware";
+import { requireProfessorAuth, requireStudentOrProfessorAuth } from "../../../infra/Auth/Middleware";
 import { Types } from "mongoose";
 
 
@@ -16,7 +16,7 @@ export default class PostRouter {
         const postRepository = new PostsRepository();
         const postService = new PostService(postRepository);
         this.postService = postService;
-        router.get(this.routePrefix+'/search', requireStudentAuth, this.searchPosts.bind(this));
+        router.get(this.routePrefix+'/search', requireStudentOrProfessorAuth, this.searchPosts.bind(this));
         router.post(this.routePrefix, requireProfessorAuth, this.createPost.bind(this));
         router.get(this.routePrefix, requireStudentOrProfessorAuth, this.getPosts.bind(this));
         router.get(this.routePrefix+'/:id', requireStudentOrProfessorAuth, this.getPostById.bind(this));
